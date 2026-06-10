@@ -1,37 +1,60 @@
 #!/system/bin/sh
-modpath="/data/adb/modules_update/AXI/"
-INJECTOR=$MODPATH/system/bin/
 
-h01print() {
+bin_path="$MODPATH/system/bin"
+note="Boost your device's performance and enjoy a smoother experience with our optimizer, designed specifically for $(getprop ro.product.device)!"
+
+installation() {
+  # awk '{print}' "$MODPATH/common/banner"
   ui_print ""
   ui_print "*******************************************"
   ui_print "*          Android Tweaker                *"
   ui_print "*  Unlocking Your Device's Potential      *"
   ui_print "*******************************************"
   ui_print ""
-  ui_print "[ * ] Version: 1.4.9"
+  ui_print "[*] version: 1.4.9"
+  ui_print "[*] Developed by @c0d3h01 - GitHub"
+  ui_print "[*] Telegram Channel: @c0d3h01prjts (Official)"
   ui_print ""
-  ui_print "[ * ] Supercharge Your Device's Performance"
+  ui_print "[*] Gives a superpower to your device's performance"
+  ui_print "[*] Bug reports: [https://github.com/c0d3h01/AndroidTweaker/issues]"
   ui_print ""
-  ui_print "[ * ] Devloped by @c0d3h01 - telegram"
+  ui_print "[*] Star this repository if you like the project :)"
   ui_print ""
-  ui_print "[ * ] If you found any bug give report Devloper"
-  ui_print ""
-  ui_print "[ * ] Channel - @c0d3h01prjts is only official channel!"
-  ui_print ""
-}
 
-h01xz() {
-  [[ "$IS64BIT" == "true" ]] && tar -xf "$MODPATH/injector2.tar.xz" -C "$MODPATH" || tar -xf "$MODPATH/injector1.tar.xz" -C "$MODPATH"
-  ui_print " Injecting Components"
-  mkdir -p $INJECTOR
-  mv -f $MODPATH/injector/ATweaker $INJECTOR/ATweaker
+  if [ "$IS64BIT" = true ]; then
+    tar -xf "$MODPATH/injector2.tar.xz" -C "$MODPATH"
+  else
+    tar -xf "$MODPATH/injector1.tar.xz" -C "$MODPATH"
+  fi
+
+  ui_print "- Injecting Components..."
+  mkdir -p "$bin_path"
+  mv -f "$MODPATH/injector/ATweaker" "$bin_path/ATweaker"
   ui_print "- Injector Successfully Injected ✓"
   ui_print ""
+
+  # Safely update module.prop description with dynamic device name
+  sed -i "s/^description=.*/description=$note/" "$MODPATH/module.prop"
+
+  ui_print "- Installing AndroidTweaker App..."
+  mv -f "$MODPATH/application/AndroidTweaker.apk" "$MODPATH/AndroidTweaker.apk"
+  rm -rf "$MODPATH/application"
+
+  if [ "$BOOTMODE" = true ]; then
+    if pm install -r -g "$MODPATH/AndroidTweaker.apk" >/dev/null 2>&1; then
+      ui_print "  - App installed successfully ✓"
+      rm -f "$MODPATH/AndroidTweaker.apk"
+    else
+      ui_print "  ! App will be installed on next boot."
+    fi
+  else
+    ui_print "  - App will be installed on next boot."
+  fi
+
+  # Launch Telegram channel if installing from booted Android (not recovery)
+  if [ "$BOOTMODE" = true ]; then
+    am start -a android.intent.action.VIEW -d https://github.com/c0d3h01/AndroidTweaker >/dev/null 2>&1 &
+  fi
 }
-h01xz
-h01print
-note="Boost your device's performance and enjoy a smoother experience with our optimizer, designed specifically for $(getprop ro.product.device)!"
-sed -i "/description=/c description=$note" "${modpath}module.prop"
-nohup am start -a android.intent.action.VIEW -d https://t.me/c0d3h01prjts >/dev/null 2>&1 &
->/dev/null 2>&1 &
+
+installation
