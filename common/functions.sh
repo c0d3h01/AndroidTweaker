@@ -4,7 +4,7 @@
 
 cleanup() {
   rm -rf $MODPATH/common 2>/dev/null
-  rm -rf /data/adb/modules_update/AXI/injector
+  rm -rf $MODPATH/injector 2>/dev/null
   rm -rf $MODPATH/injector1.tar.xz 2>/dev/null
   rm -rf $MODPATH/injector2.tar.xz 2>/dev/null
   rm -rf $MODPATH/change.log 2>/dev/null
@@ -167,14 +167,14 @@ fi
 
 # Debug
 if $DEBUG; then
-  #  ui_print "- Debug mode"
-  #  ui_print "  Module install log will include debug info"
-  #  ui_print "  Be sure to save it after module install"
+  ui_print "- Debug mode"
+  ui_print "  Module install log will include debug info"
+  ui_print "  Be sure to save it after module install"
   set -x
 fi
 
 # Extract files
-#ui_print "- Extracting module files"
+ui_print "- Extracting module files"
 unzip -o "$ZIPFILE" -x 'META-INF/*' 'common/functions.sh' -d $MODPATH >&2
 [ -f "$MODPATH/common/addon.tar.xz" ] && tar -xf $MODPATH/common/addon.tar.xz -C $MODPATH/common 2>/dev/null
 
@@ -189,8 +189,7 @@ if [ "$(ls -A $MODPATH/common/addon/*/install.sh 2>/dev/null)" ]; then
 fi
 
 # Remove files outside of module directory
-#ui_print "- Removing old files"
-
+ui_print "- Removing old files"
 if [ -f $INFO ]; then
   while read LINE; do
     if [ "$(echo -n $LINE | tail -c 1)" == "~" ]; then
@@ -209,11 +208,10 @@ if [ -f $INFO ]; then
 fi
 
 ### Install
-#ui_print "- Installing"
-
+ui_print "- Installing"
 [ -f "$MODPATH/common/install.sh" ] && . $MODPATH/common/install.sh
 
-ui_print " — ATweaker Installing for $ARCH SDK $API device..."
+ui_print " — Installing for $ARCH SDK $API device..."
 # Remove comments from files and place them, add blank line to end if not already present
 for i in $(find $MODPATH -type f -name "*.sh" -o -name "*.prop" -o -name "*.rule"); do
   [ -f $i ] && {
