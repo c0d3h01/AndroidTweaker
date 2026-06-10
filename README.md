@@ -1,5 +1,7 @@
 # Android Tweaker
 
+<a href="https://t.me/c0d3h01prjkts"><img src="https://img.shields.io/badge/Telegram-Channel-blue?logo=telegram&style=social"></a>
+
 Boost your device's performance and enjoy a smoother experience with our optimizer, designed specifically for YOU!
 
 ## Requirements
@@ -17,3 +19,7 @@ Boost your device's performance and enjoy a smoother experience with our optimiz
 5. Reboot your device
 
 The module runs automatically approximately 30 seconds after boot completes.
+
+<p align="center">
+  Android Tweaker @ Licence GPL v3.0
+</p>
