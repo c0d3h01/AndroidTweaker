@@ -1,7 +1,7 @@
-id=AXI
-name=AndroidXTweaker
+id=atweaker
+name=AndroidTweaker
 version=v1.4.9
 versionCode=149
-author=@C0d3h01 (tele)
+author=@c0d3h01 (GitHub)
 description=null
-updateJson=https://raw.githubusercontent.com/itsharshal01/AndroidXTweaker/main/module.json
+updateJson=https://raw.githubusercontent.com/c0d3h01/AndroidTweaker/main/module.json
