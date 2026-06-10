@@ -1,8 +1,8 @@
 ----------------------------------------------------------------------------------------
 AndroidxTweaker
 version : v1.4.1
-Changelog : 
-- added terminal menu 
+Changelog :
+- added terminal menu
 - removed apk due to incompatibility
 - Added ram cleaner on profile changing
 - fixed some bugs
