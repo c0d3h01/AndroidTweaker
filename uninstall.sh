@@ -1,3 +1,6 @@
+# Uninstall the companion app
+pm uninstall beastmode.profile >/dev/null 2>&1
+
 # Don't modify anything after this
 if [ -f $INFO ]; then
   while read LINE; do

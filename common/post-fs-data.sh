@@ -1,0 +1,8 @@
+# Find XML files containing a specific pattern
+conflict=$(xml=$(find /data/adb -iname "*.xml"); for i in $xml; do
+  if grep -q 'allow-in-power-save package="com.google.android.gms"' $i 2>/dev/null; then echo "$i";fi; done)
+
+# Remove conflicting lines from the identified XML files
+for i in $conflict; do
+  sed -i '/allow-in-power-save package="com.google.android.gms"/d; /allow-in-data-usage-save package="com.google.android.gms"/d' $i
+done
