@@ -1,7 +1,7 @@
-id=atweaker
+id=android_tweaker
 name=AndroidTweaker
 version=v1.4.9
 versionCode=149
 author=@c0d3h01 (GitHub)
 description=null
-updateJson=https://raw.githubusercontent.com/c0d3h01/AndroidTweaker/main/module.json
+updateJson=https://raw.githubusercontent.com/c0d3h01/AndroidTweaker/main/update.json
