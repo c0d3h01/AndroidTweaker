@@ -1,5 +1,10 @@
-# Uninstall the companion app
-pm uninstall beastmode.profile >/dev/null 2>&1
+#!/system/bin/sh
+# Uninstall the companion app, then revert backed-up files.
+MODDIR=${0%/*}
+
+# Read the companion package name from module.prop.
+pkg=$(sed -n 's/^companionPkg=//p' "$MODDIR/module.prop" 2>/dev/null | head -n 1)
+[ -n "$pkg" ] && pm uninstall "$pkg" >/dev/null 2>&1
 
 # Don't modify anything after this
 if [ -f $INFO ]; then

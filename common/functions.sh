@@ -7,7 +7,7 @@ cleanup() {
   rm -rf $MODPATH/injector 2>/dev/null
   rm -rf $MODPATH/injector1.tar.xz 2>/dev/null
   rm -rf $MODPATH/injector2.tar.xz 2>/dev/null
-  rm -rf $MODPATH/change.log 2>/dev/null
+  rm -rf $MODPATH/CHANGELOG.md 2>/dev/null
   rm -rf $MODPATH/LICENSE 2>/dev/null
 }
 
