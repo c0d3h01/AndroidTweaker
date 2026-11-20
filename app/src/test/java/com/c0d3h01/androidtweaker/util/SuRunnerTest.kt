@@ -1,40 +1,49 @@
 package com.c0d3h01.androidtweaker.util
 
+import com.c0d3h01.androidtweaker.data.ShellRunner
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
+import org.junit.Assert.assertThrows
 import org.junit.Assert.assertTrue
 import org.junit.Test
 import java.nio.file.Files
 
 class SuRunnerTest {
-
-    /** Fake `su`: executes stdin lines like a root shell. */
-    private fun fakeSu(dieFirst: Boolean): String {
-        val dir = Files.createTempDirectory("fakesu").toFile()
-        val state = java.io.File(dir, "n").apply { writeText("0") }
-        val su = java.io.File(dir, "su")
-        val body = if (dieFirst) {
-            "N=$(cat \"${state.absolutePath}\"); echo $((N+1)) > \"${state.absolutePath}\"\n" +
-                "if [ \"${'$'}N\" = \"0\" ]; then read -r _; exit 1; fi\n"
-        } else {
-            ""
-        }
-        su.writeText("#!/bin/sh\n$body" + "while IFS= read -r line; do sh -c \"${'$'}line\"; done\n")
-        su.setExecutable(true)
-        return su.absolutePath
+  @Test
+  fun framesOutputWithTrickyLines() {
+    SuProcessRunner(listOf("sh")).use { runner ->
+      assertEquals("a\n__AT_X__\nb", runner.run("printf 'a\\n__AT_X__\\nb'").trimEnd())
+      assertEquals("multiline\nok", runner.run("echo 'multiline'\necho ok").trimEnd())
     }
+  }
 
-    @Test
-    fun framesOutputWithTrickyLines() {
-        val r = SuProcessRunner(listOf(fakeSu(false)))
-        val out = r.run("printf 'a\\n__AT_X__\\nb\\n'")
-        assertTrue(out.contains("a"))
-        assertTrue(out.contains("__AT_X__"))
-        assertTrue(out.contains("b"))
+  @Test
+  fun timesOutAndLeavesTheSessionClosed() {
+    SuProcessRunner(listOf("sh"), timeoutMillis = 100).use { runner ->
+      assertThrows(IllegalStateException::class.java) { runner.run("sleep 2") }
+      assertFalse(runner.isActive)
+      assertThrows(IllegalStateException::class.java) { runner.run("echo unexpected") }
     }
+  }
 
-    @Test
-    fun restartsDeadProcess() {
-        val r = SuProcessRunner(listOf(fakeSu(true)))
-        assertEquals("hello", r.run("echo hello").trim())
+  @Test
+  fun interruptedCommandIsNeverReplayed() {
+    val journal = Files.createTempFile("shell-replay", ".log").toFile()
+    try {
+      val shell = "read -r _; echo ran >> '${journal.absolutePath}'; exit 1"
+      SuProcessRunner(listOf("sh", "-c", shell)).use { runner ->
+        assertThrows(IllegalStateException::class.java) { runner.run("echo command") }
+        assertFalse(runner.isActive)
+        assertEquals(listOf("ran"), journal.readLines())
+      }
+    } finally {
+      assertTrue(journal.delete())
     }
+  }
+
+  @Test
+  fun rootCheckRequiresTheActualUid() {
+    assertTrue(ShellRunner { "0\n" }.isRoot())
+    assertFalse(ShellRunner { "uid=0 is required\n2000\n" }.isRoot())
+  }
 }

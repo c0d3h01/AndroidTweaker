@@ -2,18 +2,32 @@ package com.c0d3h01.androidtweaker.util
 
 import com.c0d3h01.androidtweaker.data.ShellRunner
 
-/**
- * Single persistent root shell. The platform adapter (libsu, Task 3)
- * registers once via [install]; all callers share it. Unit tests install
- * a fake. Debounce (800ms, last-tap-wins) is enforced by the UI layer.
- */
 object RootShell {
-    private var runner: ShellRunner? = null
+  @Volatile private var runner: SuProcessRunner? = null
 
-    fun install(runner: ShellRunner) {
-        this.runner = runner
+  @Volatile var lastError: String? = null
+    private set
+
+  /** Returns the open session without contacting a root manager. */
+  fun runnerOrNull(): ShellRunner? = runner?.takeIf { it.isActive }
+
+  fun ensure(): ShellRunner = runnerOrNull() ?: error(lastError ?: "Root access is not connected")
+
+  /** Requests a new root session from an explicit user action or authorized boot reapply. */
+  @Synchronized
+  fun request(): ShellRunner {
+    runnerOrNull()?.let { return it }
+    runner?.close()
+    val started = SuProcessRunner()
+    return try {
+      check(started.isRoot()) { "Root access denied" }
+      runner = started
+      lastError = null
+      started
+    } catch (e: Exception) {
+      started.close()
+      lastError = e.message
+      throw e
     }
-
-    fun runner(): ShellRunner =
-        runner ?: throw IllegalStateException("RootShell not installed")
+  }
 }
