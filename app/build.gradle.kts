@@ -73,6 +73,7 @@ dependencies {
     implementation(libs.shizuku.api)
     implementation(libs.shizuku.provider)
     testImplementation(libs.junit)
+    testImplementation("org.json:json:20240303")
 }
 
 val signedApk = layout.buildDirectory.file("outputs/apk/release/app-release.apk")

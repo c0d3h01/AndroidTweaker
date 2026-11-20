@@ -15,12 +15,12 @@ import android.service.quicksettings.Tile
 import android.service.quicksettings.TileService
 import androidx.core.content.ContextCompat
 import com.c0d3h01.androidtweaker.BatteryMonitorService.MonitorStatus
-import com.c0d3h01.androidtweaker.data.BatteryReader
-import com.c0d3h01.androidtweaker.data.BatteryReading
-import com.c0d3h01.androidtweaker.data.BatteryStore
-import com.c0d3h01.androidtweaker.data.drainRate
-import com.c0d3h01.androidtweaker.data.estimateToFull
-import com.c0d3h01.androidtweaker.data.formatDuration
+import com.c0d3h01.androidtweaker.battery.BatteryReader
+import com.c0d3h01.androidtweaker.battery.BatteryReading
+import com.c0d3h01.androidtweaker.battery.BatteryRepository
+import com.c0d3h01.androidtweaker.battery.analysis.drainRate
+import com.c0d3h01.androidtweaker.battery.analysis.estimateToFull
+import com.c0d3h01.androidtweaker.battery.formatDuration
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -75,10 +75,10 @@ class BatteryTileService : TileService() {
 
   override fun onClick() {
     val status = BatteryMonitorService.status.value
-    if (BatteryStore.settings(this).monitorEnabled && (status == MonitorStatus.RUNNING || status == MonitorStatus.STARTING)) {
+    if (BatteryRepository.settings(this).monitorEnabled && (status == MonitorStatus.RUNNING || status == MonitorStatus.STARTING)) {
       BatteryMonitorService.stop(this)
     } else {
-      BatteryStore.update(this) { it.copy(monitorEnabled = true) }
+      BatteryRepository.update(this) { it.copy(monitorEnabled = true) }
       BatteryMonitorService.start(this)
     }
     update()
@@ -93,7 +93,7 @@ class BatteryTileService : TileService() {
     val tile = qsTile ?: return
     val reading = runCatching { BatteryReader.read(this) }.getOrNull()
     val level = reading?.level
-    val enabled = BatteryStore.settings(this).monitorEnabled
+    val enabled = BatteryRepository.settings(this).monitorEnabled
     val status = BatteryMonitorService.status.value
     val monitoring = enabled && status == MonitorStatus.RUNNING
     tile.label = getString(R.string.tile_battery_label)
@@ -145,7 +145,7 @@ class BatteryTileService : TileService() {
         }
 
         else -> {
-          val rate = drainRate(BatteryStore.samples(this), reading.screenOn, System.currentTimeMillis())
+          val rate = drainRate(BatteryRepository.samples(this), reading.screenOn, System.currentTimeMillis())
           if (rate == null || rate <= 0.2f) {
             null
           } else {

@@ -6,10 +6,10 @@ import android.appwidget.AppWidgetProvider
 import android.content.ComponentName
 import android.content.Context
 import android.widget.RemoteViews
-import com.c0d3h01.androidtweaker.data.BatteryReader
-import com.c0d3h01.androidtweaker.data.BatteryReading
-import com.c0d3h01.androidtweaker.data.formatPower
-import com.c0d3h01.androidtweaker.data.formatTemp
+import com.c0d3h01.androidtweaker.battery.BatteryReader
+import com.c0d3h01.androidtweaker.battery.BatteryReading
+import com.c0d3h01.androidtweaker.battery.formatPower
+import com.c0d3h01.androidtweaker.battery.formatTemp
 
 /** Home-screen dial: level, state, temperature and live power. */
 class BatteryWidgetProvider : AppWidgetProvider() {

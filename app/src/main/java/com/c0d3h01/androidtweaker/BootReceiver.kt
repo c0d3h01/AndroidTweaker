@@ -3,7 +3,7 @@ package com.c0d3h01.androidtweaker
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
-import com.c0d3h01.androidtweaker.data.ProfilePreferences
+import com.c0d3h01.androidtweaker.profiles.ProfilePreferences
 
 /** Reapplies the last selected profile after a reboot; no module required. */
 class BootReceiver : BroadcastReceiver() {

@@ -9,7 +9,11 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModelProvider
-import com.c0d3h01.androidtweaker.ui.TweakerTheme
+import com.c0d3h01.androidtweaker.app.AppScreen
+import com.c0d3h01.androidtweaker.app.AppViewModel
+import com.c0d3h01.androidtweaker.battery.BatteryViewModel
+import com.c0d3h01.androidtweaker.device.HardwareViewModel
+import com.c0d3h01.androidtweaker.ui.theme.AppTheme
 
 /** A notification tap: the destination plus a nonce so repeated taps still route. */
 data class ScreenRequest(
@@ -27,12 +31,16 @@ class MainActivity : ComponentActivity() {
     )
     super.onCreate(savedInstanceState)
     if (savedInstanceState == null) screenRequest.value = intent.screenRequest()
-    val model = ViewModelProvider(this)[TweakerViewModel::class.java]
+    val model = ViewModelProvider(this)[AppViewModel::class.java]
+    val batteryModel = ViewModelProvider(this)[BatteryViewModel::class.java]
+    val hardwareModel = ViewModelProvider(this)[HardwareViewModel::class.java]
     BatteryMonitorService.start(this)
     setContent {
-      TweakerTheme {
-        TweakerApp(
+      AppTheme {
+        AppScreen(
           model = model,
+          batteryModel = batteryModel,
+          hardwareModel = hardwareModel,
           screenRequest = screenRequest.value,
         )
       }

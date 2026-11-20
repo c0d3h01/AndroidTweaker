@@ -9,10 +9,11 @@ import android.content.Intent
 import android.content.pm.ServiceInfo
 import android.os.Build
 import android.os.IBinder
-import com.c0d3h01.androidtweaker.data.Profile
-import com.c0d3h01.androidtweaker.data.ProfilePreferences
-import com.c0d3h01.androidtweaker.data.TweakEngine
-import com.c0d3h01.androidtweaker.util.RootShell
+import com.c0d3h01.androidtweaker.access.RootConnection
+import com.c0d3h01.androidtweaker.engine.EngineFiles
+import com.c0d3h01.androidtweaker.engine.TweakEngine
+import com.c0d3h01.androidtweaker.profiles.Profile
+import com.c0d3h01.androidtweaker.profiles.ProfilePreferences
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -57,7 +58,7 @@ class TweakApplyService : Service() {
     scope.launch {
       val result =
         runCatching {
-          val runner = RootShell.request()
+          val runner = RootConnection.request()
           check(canReapply(profile)) { "Boot reapply disabled or profile changed" }
           TweakEngine.apply(this@TweakApplyService, runner, profile, fromBoot = true)
         }.getOrElse { e ->
@@ -65,10 +66,10 @@ class TweakApplyService : Service() {
             ok = false,
             exitCode = -1,
             output = e.message ?: "Boot apply failed",
-            logPath = TweakEngine.logFile(this@TweakApplyService).absolutePath,
+            logPath = EngineFiles.logFile(this@TweakApplyService).absolutePath,
           )
         }
-      TweakEngine.record(
+      EngineFiles.record(
         this@TweakApplyService,
         if (result.ok) "boot: reapplied ${profile.label}" else "boot: failed ${profile.label} (${result.output.trim().take(300)})",
       )
