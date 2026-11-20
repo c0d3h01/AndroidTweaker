@@ -1,15 +1,16 @@
-# Superpowers working docs — local only, never committed
+# Superpowers working docs
 docs/superpowers/
 .superpowers/
 
-# Agent / tool scratch — local only, never committed
+# Agent / tool scratch
 .opencode/
 .claude/
 .claude.json
 .worktrees/
 *.worktree
+.agents
 
-# Android / Gradle build outputs — local only, never committed
+# Android / Gradle build outputs
 .gradle/
 **/build/
 local.properties
@@ -26,10 +27,16 @@ captures/
 # anyone with read access can ship updates as this app.
 !app/release.keystore
 !app/release/androidtweaker.apk
+.kotlin
+.ruff_cache
+.rea/
 
-# Android Studio / IntelliJ — local only, never committed
+# Editor
+!.editorconfig
+
+# Android Studio / IntelliJ
 .idea/
 *.iml
 
-# macOS — local only, never committed
+# macOS
 .DS_Store
