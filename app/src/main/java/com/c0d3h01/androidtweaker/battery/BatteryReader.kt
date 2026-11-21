@@ -7,15 +7,10 @@ import android.os.BatteryManager
 import android.os.PowerManager
 import android.os.SystemClock
 import com.c0d3h01.androidtweaker.common.normalizeTempC
-import java.io.File
 import kotlin.math.roundToInt
 
 object BatteryReader {
-  private val batteryDir: File? by lazy {
-    listOf("/sys/class/power_supply/battery", "/sys/class/power_supply/bms")
-      .map(::File)
-      .firstOrNull { it.isDirectory }
-  }
+  private val sensors = BatterySensors()
 
   fun read(context: Context): BatteryReading {
     val bm = context.getSystemService(Context.BATTERY_SERVICE) as? BatteryManager
@@ -45,12 +40,18 @@ object BatteryReader {
             val scale = intent.getIntExtra(BatteryManager.EXTRA_SCALE, -1)
             if (raw >= 0 && scale > 0) (raw * 100f / scale).roundToInt() else null
           }
-    val current =
-      batteryCurrentMa(bm?.getIntProperty(BatteryManager.BATTERY_PROPERTY_CURRENT_NOW))
-        ?: sysfsLong("current_now")?.let { (it / 1000.0).roundToInt() }
-    val voltage =
-      sticky?.getIntExtra(BatteryManager.EXTRA_VOLTAGE, -1)?.takeIf { it > 1_000 }
-        ?: sysfsLong("voltage_now")?.let { (it / 1000).toInt() }?.takeIf { it > 1_000 }
+    val frameworkCurrent = bm?.getIntProperty(BatteryManager.BATTERY_PROPERTY_CURRENT_NOW)
+    val current = batteryCurrentMa(frameworkCurrent)?.takeIf { it != 0 } ?: resolveBatteryCurrentMa(
+      frameworkNow = frameworkCurrent,
+      sysfsNow = sensors.longs("current_now"),
+      frameworkAverage = bm?.getIntProperty(BatteryManager.BATTERY_PROPERTY_CURRENT_AVERAGE),
+      allowZero = plugged != Plugged.NONE && status in setOf(BatteryStatus.IDLE, BatteryStatus.FULL),
+    )
+    val broadcastVoltage = sticky?.getIntExtra(BatteryManager.EXTRA_VOLTAGE, -1)
+    val voltage = broadcastVoltage?.takeIf { it > 1_000 } ?: resolveBatteryVoltageMv(
+      broadcastVoltage,
+      sensors.longs("voltage_now"),
+    )
     val temp =
       sticky
         ?.getIntExtra(BatteryManager.EXTRA_TEMPERATURE, Int.MIN_VALUE)
@@ -122,10 +123,7 @@ object BatteryReader {
 
   private fun sysfsLong(name: String): Long? = sysfsText(name)?.toLongOrNull()
 
-  private fun sysfsText(name: String): String? =
-    batteryDir?.resolve(name)?.let { file ->
-      runCatching { file.readText().trim().ifBlank { null } }.getOrNull()
-    }
+  private fun sysfsText(name: String): String? = sensors.text(name)
 }
 
 internal fun batteryCurrentMa(microamps: Int?): Int? =

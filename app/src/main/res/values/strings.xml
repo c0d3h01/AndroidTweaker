@@ -34,4 +34,7 @@
     <string name="tile_time_to_full">%1$s to full</string>
     <string name="tile_desc_monitoring">%1$s, monitoring</string>
     <string name="tile_desc_paused">%1$s, monitor paused</string>
+    <string name="battery_power_unavailable">Current or voltage sensor unavailable</string>
+    <string name="battery_power_draw">Battery power draw</string>
+    <string name="battery_power_charging">Battery charging power</string>
 </resources>

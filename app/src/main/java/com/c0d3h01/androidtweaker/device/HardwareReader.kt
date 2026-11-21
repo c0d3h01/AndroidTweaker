@@ -2,15 +2,14 @@ package com.c0d3h01.androidtweaker.device
 
 import android.app.ActivityManager
 import android.content.Context
-import android.content.Intent
-import android.content.IntentFilter
-import android.os.BatteryManager
 import android.os.Build
 import android.os.Environment
 import android.os.StatFs
 import com.c0d3h01.androidtweaker.access.AccessManager
 import com.c0d3h01.androidtweaker.access.CommandRunner
-import com.c0d3h01.androidtweaker.battery.batteryCurrentMa
+import com.c0d3h01.androidtweaker.battery.BatteryReader
+import com.c0d3h01.androidtweaker.battery.BatteryStatus
+import com.c0d3h01.androidtweaker.battery.Plugged
 import com.c0d3h01.androidtweaker.common.normalizeTempC
 import java.io.File
 import kotlinx.coroutines.Dispatchers
@@ -452,40 +451,25 @@ object HardwareReader {
   }
 
   private fun readBattery(context: Context): BatteryStats {
-    val bm = context.getSystemService(Context.BATTERY_SERVICE) as? BatteryManager
-    val percent = bm?.getIntProperty(BatteryManager.BATTERY_PROPERTY_CAPACITY)?.takeIf { it in 0..100 }
-    val currentRaw = bm?.getIntProperty(BatteryManager.BATTERY_PROPERTY_CURRENT_NOW)
-    val currentMa = batteryCurrentMa(currentRaw)
-    val sticky =
-      context.registerReceiver(null, IntentFilter(Intent.ACTION_BATTERY_CHANGED))
-    val temp =
-      sticky
-        ?.getIntExtra(BatteryManager.EXTRA_TEMPERATURE, Int.MIN_VALUE)
-        ?.takeUnless { it == Int.MIN_VALUE }
-        ?.let { it / 10f }
-    val voltage = sticky?.getIntExtra(BatteryManager.EXTRA_VOLTAGE, -1)?.takeIf { it > 0 }
-    val status =
-      when (sticky?.getIntExtra(BatteryManager.EXTRA_STATUS, -1)) {
-        BatteryManager.BATTERY_STATUS_CHARGING -> "Charging"
-        BatteryManager.BATTERY_STATUS_DISCHARGING -> "Discharging"
-        BatteryManager.BATTERY_STATUS_FULL -> "Full"
-        BatteryManager.BATTERY_STATUS_NOT_CHARGING -> "Not charging"
-        else -> null
-      }
-    val plugged =
-      when (sticky?.getIntExtra(BatteryManager.EXTRA_PLUGGED, -1)) {
-        BatteryManager.BATTERY_PLUGGED_AC -> "AC"
-        BatteryManager.BATTERY_PLUGGED_USB -> "USB"
-        BatteryManager.BATTERY_PLUGGED_WIRELESS -> "Wireless"
-        else -> null
-      }
+    val reading = BatteryReader.read(context)
     return BatteryStats(
-      percent = percent,
-      tempC = temp,
-      currentMa = currentMa,
-      voltageMv = voltage,
-      status = status,
-      plugged = plugged,
+      percent = reading.level,
+      tempC = reading.tempC,
+      currentMa = reading.currentMa,
+      voltageMv = reading.voltageMv,
+      status = when (reading.status) {
+        BatteryStatus.CHARGING -> "Charging"
+        BatteryStatus.DISCHARGING -> "Discharging"
+        BatteryStatus.FULL -> "Full"
+        BatteryStatus.IDLE -> "Not charging"
+        BatteryStatus.UNKNOWN -> null
+      },
+      plugged = when (reading.plugged) {
+        Plugged.AC -> "AC"
+        Plugged.USB -> "USB"
+        Plugged.WIRELESS -> "Wireless"
+        else -> null
+      },
     )
   }
 

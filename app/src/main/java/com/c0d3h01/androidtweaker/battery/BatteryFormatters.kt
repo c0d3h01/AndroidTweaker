@@ -16,7 +16,16 @@ fun formatDuration(ms: Long?): String {
 
 fun formatMah(mah: Int?): String = mah?.let { "$it\u00A0mAh" } ?: "—"
 
-fun formatPower(w: Float?): String = w?.let { String.format(Locale.US, "%.1f\u00A0W", it) } ?: "—"
+fun formatPowerValue(w: Float?): String = w?.let {
+  val precision = when {
+    it > 0f && it < 0.01f -> "%.3f"
+    it > 0f && it < 0.1f -> "%.2f"
+    else -> "%.1f"
+  }
+  String.format(Locale.US, precision, it)
+} ?: "—"
+
+fun formatPower(w: Float?): String = w?.let { "${formatPowerValue(it)}\u00A0W" } ?: "—"
 
 fun formatCurrent(ma: Int?): String = ma?.let { (if (it > 0) "+" else "") + String.format(Locale.US, "%d\u00A0mA", it) } ?: "—"
 
