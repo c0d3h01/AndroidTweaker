@@ -57,7 +57,7 @@ The everyday battery experience works on a normal Android phone. If you already 
 | --- | --- |
 | **Standard phone** | Battery monitoring, health estimates, history, alerts, reports, widgets, and exports. |
 | **Shizuku** | Supported system settings and tools through an optional Android access service. |
-| **Root access** | Battery, Balanced, Performance, and Gaming profiles, plus supported charging and device controls. |
+| **Root access** | Battery, Balanced, and Performance profiles, plus supported charging and device controls. |
 
 On compatible rooted phones, charging controls can pause charging at a chosen percentage or temperature while monitoring runs. These controls depend on the phone's hardware and software. The bypass option pauses battery charging; it does not guarantee direct power from the charger. See [charging controls and recovery](docs/specs/07-root-charging-controls.md) before using them.
 
