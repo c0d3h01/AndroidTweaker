@@ -65,7 +65,8 @@ fun TuningScreen(
   var index by rememberSaveable {
     mutableIntStateOf(Profile.fromCode(currentCode)?.ordinal ?: Profile.BALANCED.ordinal)
   }
-  val profile = Profile.entries[index]
+  val selectedIndex = index.coerceIn(Profile.entries.indices)
+  val profile = Profile.entries[selectedIndex]
   val spec = PROFILE_SPECS.firstOrNull { it.profile == profile }
   val tone = spec?.tone ?: AppColors.Signal
   val profileLabels = PROFILE_SPECS.map { stringResource(it.title) }
@@ -76,6 +77,7 @@ fun TuningScreen(
   }
 
   fun update(next: ProfileSettings) {
+    if (!TuningFeature.PROFILES.available(AccessManager.mode()) || busy) return
     prefs = next.sanitized()
     ProfileSettingsStore.save(context, profile, prefs)
   }
@@ -119,7 +121,7 @@ fun TuningScreen(
 
     if (tab == 0) {
       profileControls(
-        profile, spec, prefs, profileLabels, index, { index = it },
+        profile, spec, prefs, profileLabels, selectedIndex, { index = it },
         pendingCode, shell, busy, onApply, ::update,
       )
     } else {
@@ -133,6 +135,7 @@ fun TuningScreen(
         onRestore = { pkg -> onCommand("restore $pkg") },
         onGrantShizuku = onGrantShizuku,
         onOpenShizuku = onOpenShizuku,
+        busy = busy,
       )
     }
   }

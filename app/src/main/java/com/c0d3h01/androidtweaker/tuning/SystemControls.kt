@@ -16,13 +16,16 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import com.c0d3h01.androidtweaker.R
+import com.c0d3h01.androidtweaker.access.AccessManager
 import com.c0d3h01.androidtweaker.ui.components.ChoiceChipRow
 import com.c0d3h01.androidtweaker.ui.components.Eyebrow
 import com.c0d3h01.androidtweaker.ui.components.GhostButton
 import com.c0d3h01.androidtweaker.ui.components.Hairline
-import com.c0d3h01.androidtweaker.ui.components.Panel
+import com.c0d3h01.androidtweaker.ui.components.LocalControlsEnabled
 import com.c0d3h01.androidtweaker.ui.components.SwitchRow
 import com.c0d3h01.androidtweaker.ui.theme.AppColors
 import com.c0d3h01.androidtweaker.ui.theme.AppType
@@ -30,17 +33,20 @@ import com.c0d3h01.androidtweaker.ui.theme.AppType
 internal fun LazyListScope.systemControls(
   features: TuningSettings,
   onFeatures: (TuningSettings) -> Unit,
-  rooted: Boolean,
+  access: AccessManager.Mode,
+  busy: Boolean,
   onCommand: (String) -> Unit,
   onPickApps: (AppPickerKind) -> Unit,
   onRemoveBloat: () -> Unit,
   onRestore: (String) -> Unit,
 ) {
+  val rooted = access.canApplyProfiles
   item {
     Eyebrow(label = "Cleanup & system rules")
   }
   item {
-    Panel {
+    TuningPanel(TuningFeature.MAINTENANCE, access, busy) {
+      val controlsEnabled = LocalControlsEnabled.current
       Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
         GhostButton("Free RAM", onClick = { onCommand("clean ram") }, modifier = Modifier.weight(1f), enabled = rooted)
         GhostButton("Clear cache", onClick = { onCommand("clean cache") }, modifier = Modifier.weight(1f), enabled = rooted)
@@ -56,6 +62,8 @@ internal fun LazyListScope.systemControls(
         title = "Reduce debug logging",
         blurb = "Cuts log buffers and verbose kernel/ART tracing.",
         checked = features.disableLogs,
+        enabled = rooted,
+        badge = if (rooted) null else stringResource(R.string.tuning_root_badge),
         onChange = { onFeatures(features.copy(disableLogs = it)) },
       )
       Hairline(Modifier.padding(vertical = 2.dp))
@@ -99,6 +107,7 @@ internal fun LazyListScope.systemControls(
               Modifier
                 .sizeIn(minWidth = 48.dp, minHeight = 48.dp)
                 .clickable(
+                  enabled = controlsEnabled,
                   role = androidx.compose.ui.semantics.Role.Button,
                   onClickLabel = "Restore $pkg",
                 ) { onRestore(pkg) },

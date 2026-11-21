@@ -6,21 +6,23 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.c0d3h01.androidtweaker.access.AccessManager
 import com.c0d3h01.androidtweaker.ui.components.Eyebrow
 import com.c0d3h01.androidtweaker.ui.components.Hairline
-import com.c0d3h01.androidtweaker.ui.components.Panel
 import com.c0d3h01.androidtweaker.ui.components.SwitchRow
 
 internal fun LazyListScope.powerControls(
   features: TuningSettings,
   onFeatures: (TuningSettings) -> Unit,
   onPickApps: (AppPickerKind) -> Unit,
+  access: AccessManager.Mode,
+  busy: Boolean,
 ) {
   item {
     Eyebrow(label = "Doze & battery")
   }
   item {
-    Panel {
+    TuningPanel(TuningFeature.POWER, access, busy) {
       SwitchRow(
         title = "Force doze",
         blurb = "Enter device idle as soon as the screen turns off.",

@@ -5,17 +5,17 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.c0d3h01.androidtweaker.access.AccessManager
 import com.c0d3h01.androidtweaker.ui.components.Eyebrow
 import com.c0d3h01.androidtweaker.ui.components.Hairline
-import com.c0d3h01.androidtweaker.ui.components.Panel
 import com.c0d3h01.androidtweaker.ui.components.SwitchRow
 
-internal fun LazyListScope.networkControls(features: TuningSettings, onFeatures: (TuningSettings) -> Unit) {
+internal fun LazyListScope.networkControls(features: TuningSettings, onFeatures: (TuningSettings) -> Unit, access: AccessManager.Mode, busy: Boolean) {
   item {
     Eyebrow(label = "Network")
   }
   item {
-    Panel {
+    TuningPanel(TuningFeature.NETWORK, access, busy) {
       SwitchRow(
         title = "Keep Wi-Fi awake",
         blurb = "Disable Wi-Fi sleep while the device is plugged in.",

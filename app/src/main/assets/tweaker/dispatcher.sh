@@ -1,44 +1,34 @@
 #!/system/bin/sh
-# lib/dispatcher.sh — CLI parse + route for the app's on-device engine.
+# dispatcher.sh — CLI parse + route for the app's on-device engine.
 # The app exports MODDIR to its extracted assets and runs:
-#   MODDIR=<dir> sh <dir>/lib/dispatcher.sh apply <profile>
-#   MODDIR=<dir> sh <dir>/lib/dispatcher.sh feature
-#   MODDIR=<dir> sh <dir>/lib/dispatcher.sh charge|doze|throttle|clean|apps|...
+#   MODDIR=<dir> sh <dir>/dispatcher.sh apply <profile>
+#   MODDIR=<dir> sh <dir>/dispatcher.sh feature
+#   MODDIR=<dir> sh <dir>/dispatcher.sh charge|doze|throttle|clean|apps|...
 # There is no daemon or property watcher; the app applies profiles directly.
 # Under Shizuku the same script runs as uid 2000: `settings`, `cmd`, `pm` and
 # `dumpsys` keep working, sysfs groups are skipped by want().
 
-if [ -z "${MODDIR:-}" ] || [ ! -f "$MODDIR/lib/common.sh" ]; then
-  MODDIR=$(cd "${0%/*}/.." 2>/dev/null && pwd -P)
+if [ -z "${MODDIR:-}" ] || [ ! -f "$MODDIR/core/common.sh" ]; then
+  MODDIR=$(cd "${0%/*}" 2>/dev/null && pwd -P)
 fi
 export MODDIR
 
-. "$MODDIR/lib/common.sh"
-. "$MODDIR/lib/notify.sh"
-. "$MODDIR/lib/detect.sh"
-. "$MODDIR/lib/tweaks/renice.sh"
-. "$MODDIR/lib/tweaks/cpu.sh"
-. "$MODDIR/lib/tweaks/gpu.sh"
-. "$MODDIR/lib/tweaks/io.sh"
-. "$MODDIR/lib/tweaks/sched.sh"
-. "$MODDIR/lib/tweaks/stune.sh"
-. "$MODDIR/lib/tweaks/kernel.sh"
-. "$MODDIR/lib/tweaks/thermal.sh"
-. "$MODDIR/lib/tweaks/vm.sh"
-. "$MODDIR/lib/tweaks/fs.sh"
-. "$MODDIR/lib/tweaks/display.sh"
-. "$MODDIR/lib/tweaks/ksm.sh"
-. "$MODDIR/lib/tweaks/charging.sh"
-. "$MODDIR/lib/tweaks/doze.sh"
-. "$MODDIR/lib/tweaks/network.sh"
-. "$MODDIR/lib/tweaks/cleanup.sh"
-. "$MODDIR/lib/tweaks/apps.sh"
-. "$MODDIR/lib/tweaks/misc.sh"
+. "$MODDIR/core/common.sh"
+. "$MODDIR/core/notify.sh"
+. "$MODDIR/core/detect.sh"
+. "$MODDIR/actions/display.sh"
+. "$MODDIR/actions/thermal.sh"
+. "$MODDIR/actions/network.sh"
+. "$MODDIR/actions/doze.sh"
+. "$MODDIR/actions/charging.sh"
+. "$MODDIR/actions/cleanup.sh"
+. "$MODDIR/actions/apps.sh"
+. "$MODDIR/actions/maintenance.sh"
 
 usage() {
   cat >&2 <<'EOF'
 usage: dispatcher.sh <command>
-  apply <battery|balanced|performance|gaming>
+  apply <battery|balanced|performance>
   feature                     apply the global feature switches
   charge [reset]              enforce or release the monitor's charging hold
   doze [force|restore]        idle timings, forced idle, or restore
@@ -73,7 +63,7 @@ apply_features() {
 
 do_apply() {
   case "$1" in
-  battery | balanced | performance | gaming) ;;
+  battery | balanced | performance) ;;
   *)
     usage
     ;;
@@ -82,6 +72,7 @@ do_apply() {
   detect_devices
   CUSTOM_PROFILE="$1"
   . "$MODDIR/profiles/$1.sh"
+  apply_profile
   if want system; then
     case "$1" in
     battery) settings put global low_power 1 ;;

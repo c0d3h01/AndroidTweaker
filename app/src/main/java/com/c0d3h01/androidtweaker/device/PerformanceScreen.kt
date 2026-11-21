@@ -173,6 +173,7 @@ fun PerformanceScreen(
         selected = currentCode == spec.profile.code,
         pending = pendingCode == spec.profile.code,
         onSelect = { onSelect(spec.profile) },
+        enabled = shell.canApplyProfiles && !quickBusy,
       )
     }
 

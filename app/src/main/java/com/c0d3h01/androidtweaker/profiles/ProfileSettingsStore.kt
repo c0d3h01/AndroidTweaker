@@ -3,7 +3,6 @@ package com.c0d3h01.androidtweaker.profiles
 import android.content.Context
 import com.c0d3h01.androidtweaker.engine.EngineFiles
 import java.io.File
-import java.util.Locale
 
 /** Persists [ProfileSettings] per profile and writes the conf the engine sources. */
 object ProfileSettingsStore {
@@ -14,7 +13,7 @@ object ProfileSettingsStore {
     profile: Profile,
   ): ProfileSettings {
     val prefs = context.getSharedPreferences(PREFS, Context.MODE_PRIVATE)
-    val prefix = "${profile.name.lowercase(Locale.US)}."
+    val prefix = "${profile.preferenceKey}."
     // A profile saved before this feature existed has no keys: keep every group.
     val stored = ProfileGroup.entries.filter { prefs.contains(prefix + it.key) }
     val groups =
@@ -40,7 +39,7 @@ object ProfileSettingsStore {
     prefs: ProfileSettings,
   ) {
     val clean = prefs.sanitized()
-    val prefix = "${profile.name.lowercase(Locale.US)}."
+    val prefix = "${profile.preferenceKey}."
     val editor = context.getSharedPreferences(PREFS, Context.MODE_PRIVATE).edit()
     ProfileGroup.entries.forEach { editor.putBoolean(prefix + it.key, it in clean.groups) }
     listOf(
@@ -60,7 +59,7 @@ object ProfileSettingsStore {
   ): File =
     File(
       EngineFiles.directory(context),
-      "custom/${profile.name.lowercase(Locale.US)}.conf",
+      "custom/${profile.commandKey}.conf",
     )
 
   /** Must run before every apply, including the boot reapply. */

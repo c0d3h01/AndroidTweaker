@@ -18,7 +18,7 @@ enum class ProfileSection(
 
 /**
  * One apply_* family in the bundled engine. [key] is what `want()` in
- * lib/common.sh matches, so the two lists must stay in step.
+ * core/common.sh matches, so the two lists must stay in step.
  */
 enum class ProfileGroup(
   val key: String,

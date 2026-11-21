@@ -40,6 +40,7 @@ import com.c0d3h01.androidtweaker.battery.formatTemp
 import com.c0d3h01.androidtweaker.common.clockWithSeconds
 import com.c0d3h01.androidtweaker.profiles.Profile
 import com.c0d3h01.androidtweaker.profiles.ProfileSpec
+import com.c0d3h01.androidtweaker.profiles.profileLevel
 import com.c0d3h01.androidtweaker.ui.components.Eyebrow
 import com.c0d3h01.androidtweaker.ui.components.Hairline
 import com.c0d3h01.androidtweaker.ui.components.InfoRow
@@ -142,7 +143,7 @@ internal fun ActiveProfilePanel(
   ) {
     Eyebrow(label = "Active profile") {
       Text(
-        if (code > 0) "PROFILE $code" else "NOT APPLIED",
+        if (level > 0) "PROFILE $level" else "NOT APPLIED",
         style = AppType.micro,
         color = AppColors.InkFaint,
       )
@@ -167,7 +168,7 @@ internal fun ActiveProfilePanel(
     Spacer(Modifier.height(6.dp))
     Text(desc, style = MaterialTheme.typography.bodySmall, color = AppColors.InkMuted)
     Spacer(Modifier.height(16.dp))
-    SegmentedMeter(level = level, tone = tone)
+    SegmentedMeter(total = Profile.entries.size, level = level, tone = tone)
     Spacer(Modifier.height(7.dp))
     Row(Modifier.fillMaxWidth()) {
       Text("ECO", style = AppType.micro, color = AppColors.InkFaint)
@@ -286,11 +287,13 @@ internal fun ProfileRow(
   selected: Boolean,
   pending: Boolean,
   onSelect: () -> Unit,
+  enabled: Boolean,
 ) {
   val bg by animateColorAsState(if (selected) spec.tone.copy(alpha = 0.07f) else AppColors.Panel, label = "profileBg")
   val line by animateColorAsState(if (selected) spec.tone else AppColors.Hairline, label = "profileLine")
   Panel(
     onClick = onSelect,
+    enabled = enabled,
     onClickLabel = if (selected) "Profile already active" else "Apply ${spec.profile.name.lowercase()} profile",
     container = bg,
     borderColor = if (selected) spec.tone.copy(alpha = 0.40f) else AppColors.Hairline,
@@ -339,7 +342,7 @@ internal fun ProfileRow(
         )
         Spacer(Modifier.height(11.dp))
         Row(verticalAlignment = Alignment.CenterVertically) {
-          SegmentedMeter(level = spec.level, tone = spec.tone, modifier = Modifier.weight(1f))
+          SegmentedMeter(total = Profile.entries.size, level = spec.level, tone = spec.tone, modifier = Modifier.weight(1f))
           Spacer(Modifier.width(10.dp))
           Text(spec.tag, style = AppType.micro, color = AppColors.InkFaint)
         }

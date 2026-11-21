@@ -254,12 +254,3 @@ fun formatBytes(bytes: Long?): String =
     bytes >= 1L shl 20 -> String.format(Locale.US, "%.0f\u00A0MB", bytes / (1L shl 20).toDouble())
     else -> String.format(Locale.US, "%.0f\u00A0KB", bytes / 1024.0)
   }
-
-fun profileLevel(code: Int?): Int =
-  when (code) {
-    1 -> 1
-    2 -> 2
-    3 -> 3
-    4 -> 4
-    else -> 0
-  }

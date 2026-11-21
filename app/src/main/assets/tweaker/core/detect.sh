@@ -1,5 +1,5 @@
 #!/system/bin/sh
-# lib/detect.sh — one-shot CPU/GPU detection.
+# core/detect.sh — one-shot CPU/GPU detection.
 # Every sysfs path is prefixed with ${SYSFS_ROOT:-} (empty on device)
 # so tests can point detection at a fixture tree.
 # Exports: CPU_GOVERNOR CPU_MAXFREQ CPU_HALF

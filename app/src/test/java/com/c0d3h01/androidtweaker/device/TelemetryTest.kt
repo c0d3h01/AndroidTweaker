@@ -1,6 +1,7 @@
 package com.c0d3h01.androidtweaker.device
 
 import com.c0d3h01.androidtweaker.common.normalizeTempC
+import com.c0d3h01.androidtweaker.profiles.profileLevel
 import com.c0d3h01.androidtweaker.settings.LogLevel
 import com.c0d3h01.androidtweaker.settings.classifyLogLine
 import org.junit.Assert.assertEquals
@@ -97,7 +98,8 @@ class TelemetryTest {
   @Test
   fun profileLevelMapsCodes() {
     assertEquals(1, profileLevel(1))
-    assertEquals(4, profileLevel(4))
+    assertEquals(3, profileLevel(4))
+    assertEquals(0, profileLevel(3))
     assertEquals(0, profileLevel(null))
     assertEquals(0, profileLevel(9))
   }

@@ -77,10 +77,13 @@ fun PrimaryButton(
   modifier: Modifier = Modifier,
   enabled: Boolean = true,
 ) {
+  val inheritedEnabled = LocalControlsEnabled.current
+  val controlsEnabled = enabled && inheritedEnabled
+  val opacity = if (inheritedEnabled && !enabled) 0.45f else 1f
   Button(
     onClick = onClick,
-    enabled = enabled,
-    modifier = modifier.fillMaxWidth().height(50.dp),
+    enabled = controlsEnabled,
+    modifier = modifier.alpha(opacity).fillMaxWidth().height(50.dp),
     shape = RoundedCornerShape(12.dp),
     colors =
       ButtonDefaults.buttonColors(
@@ -107,10 +110,13 @@ fun GhostButton(
   modifier: Modifier = Modifier,
   enabled: Boolean = true,
 ) {
+  val inheritedEnabled = LocalControlsEnabled.current
+  val controlsEnabled = enabled && inheritedEnabled
+  val opacity = if (inheritedEnabled && !enabled) 0.45f else 1f
   OutlinedButton(
     onClick = onClick,
-    enabled = enabled,
-    modifier = modifier.fillMaxWidth().height(48.dp),
+    enabled = controlsEnabled,
+    modifier = modifier.alpha(opacity).fillMaxWidth().height(48.dp),
     shape = RoundedCornerShape(12.dp),
     border = BorderStroke(1.dp, AppColors.HairlineStrong),
     colors =
@@ -121,10 +127,10 @@ fun GhostButton(
     contentPadding = PaddingValues(horizontal = 16.dp),
   ) {
     if (icon != null) {
-      Icon(icon, contentDescription = null, modifier = Modifier.size(16.dp), tint = AppColors.InkMuted)
+      Icon(icon, contentDescription = null, modifier = Modifier.size(16.dp), tint = if (controlsEnabled) AppColors.InkMuted else AppColors.InkFaint)
       Spacer(Modifier.width(8.dp))
     }
-    Text(text.uppercase(), style = MaterialTheme.typography.labelLarge, color = AppColors.InkMuted)
+    Text(text.uppercase(), style = MaterialTheme.typography.labelLarge, color = if (controlsEnabled) AppColors.InkMuted else AppColors.InkFaint)
   }
 }
 
@@ -286,8 +292,12 @@ fun ChoiceChip(
   label: String,
   selected: Boolean,
   modifier: Modifier = Modifier,
+  enabled: Boolean = true,
   onClick: () -> Unit,
 ) {
+  val inheritedEnabled = LocalControlsEnabled.current
+  val controlsEnabled = enabled && inheritedEnabled
+  val opacity = if (inheritedEnabled && !enabled) 0.45f else 1f
   val shape = RoundedCornerShape(9.dp)
   val fill by animateColorAsState(
     targetValue = if (selected) AppColors.Signal.copy(alpha = 0.16f) else AppColors.Sunken,
@@ -301,12 +311,13 @@ fun ChoiceChip(
   )
   Box(
     modifier
+      .alpha(opacity)
       .heightIn(min = 48.dp)
       .defaultMinSize(minWidth = 56.dp)
       .clip(shape)
       .background(fill)
       .border(1.dp, border, shape)
-      .selectable(selected = selected, role = Role.RadioButton, onClick = onClick)
+      .selectable(enabled = controlsEnabled, selected = selected, role = Role.RadioButton, onClick = onClick)
       .padding(horizontal = 12.dp, vertical = 8.dp),
     contentAlignment = Alignment.Center,
   ) {
@@ -328,6 +339,7 @@ fun ChoiceChipRow(
   selected: Int,
   onSelect: (Int) -> Unit,
   modifier: Modifier = Modifier,
+  enabled: Boolean = true,
 ) {
   FlowRow(
     modifier.fillMaxWidth(),
@@ -335,7 +347,7 @@ fun ChoiceChipRow(
     verticalArrangement = Arrangement.spacedBy(6.dp),
   ) {
     labels.forEachIndexed { index, label ->
-      ChoiceChip(label = label, selected = index == selected, onClick = { onSelect(index) })
+      ChoiceChip(enabled = enabled, label = label, selected = index == selected, onClick = { onSelect(index) })
     }
   }
 }
@@ -353,11 +365,15 @@ fun SwitchRow(
   tone: Color = AppColors.Signal,
   onChange: (Boolean) -> Unit = {},
 ) {
+  val inheritedEnabled = LocalControlsEnabled.current
+  val controlsEnabled = enabled && inheritedEnabled
+  val opacity = if (inheritedEnabled && !enabled) 0.45f else 1f
   Row(
     modifier
+      .alpha(opacity)
       .fillMaxWidth()
       .heightIn(min = 48.dp)
-      .toggleable(value = checked, enabled = enabled, role = Role.Switch, onValueChange = onChange)
+      .toggleable(value = checked, enabled = controlsEnabled, role = Role.Switch, onValueChange = onChange)
       .padding(vertical = 9.dp),
     verticalAlignment = Alignment.CenterVertically,
   ) {
@@ -375,7 +391,7 @@ fun SwitchRow(
         Text(
           title,
           style = MaterialTheme.typography.titleMedium,
-          color = if (enabled) AppColors.Ink else AppColors.InkFaint,
+          color = if (controlsEnabled) AppColors.Ink else AppColors.InkFaint,
           maxLines = 2,
           overflow = TextOverflow.Ellipsis,
         )
@@ -399,7 +415,7 @@ fun SwitchRow(
     Switch(
       checked = checked,
       onCheckedChange = null,
-      enabled = enabled,
+      enabled = controlsEnabled,
       colors =
         androidx.compose.material3.SwitchDefaults.colors(
           checkedThumbColor = AppColors.Canvas,

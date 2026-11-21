@@ -1,5 +1,5 @@
 #!/system/bin/sh
-# lib/tweaks/misc.sh — first-boot maintenance: fstrim set + dexopt props.
+# actions/maintenance.sh — first-boot maintenance: fstrim set + dexopt props.
 # Ex-V1tweaker() minus its notification (caller notifies).
 
 apply_misc() {

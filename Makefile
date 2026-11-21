@@ -36,12 +36,13 @@ install: release ## Install release on connected device (adb)
 	adb install -r $(APK)
 
 lint-shell: ## Syntax-check the bundled engine scripts
-	@for f in $(ENGINE)/lib/*.sh $(ENGINE)/lib/tweaks/*.sh $(ENGINE)/profiles/*.sh; do \
-	  sh -n "$$f" || exit 1; \
-	done; echo "shell OK"
+	@find $(ENGINE) -type f -name '*.sh' -exec sh -c 'for f do sh -n "$$f" || exit 1; done' sh {} +
+	@echo "shell OK"
 
 test-shell: lint-shell ## Test charging policy against simulated device files
 	sh app/src/test/shell/charging_test.sh
+	sh app/src/test/shell/profile_test.sh
+	sh app/src/test/shell/dispatcher_test.sh
 
 check: test test-shell ## JVM tests, shell syntax, and charging policy
 

@@ -9,9 +9,9 @@ import org.junit.Test
 class EngineCommandsTest {
   @Test
   fun applyUsesProfileNameAndDirectDispatcher() {
-    val cmd = EngineCommands.apply("/data/user/0/app/files/tweaker", Profile.GAMING, "2026-11-15 10:00:00")
+    val cmd = EngineCommands.apply("/data/user/0/app/files/tweaker", Profile.PERFORMANCE, "2026-11-15 10:00:00")
     assertTrue(cmd.contains("MODDIR='/data/user/0/app/files/tweaker'"))
-    assertTrue(cmd.contains("sh '/data/user/0/app/files/tweaker/lib/dispatcher.sh' 'apply' 'gaming'"))
+    assertTrue(cmd.contains("sh '/data/user/0/app/files/tweaker/dispatcher.sh' 'apply' 'performance'"))
     assertTrue(cmd.contains("2026-11-15 10:00:00"))
   }
 

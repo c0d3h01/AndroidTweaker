@@ -1,5 +1,5 @@
 #!/system/bin/sh
-# lib/tweaks/cleanup.sh — RAM, cache, log and app-library maintenance.
+# actions/cleanup.sh — RAM, cache, log and app-library maintenance.
 # Everything here is reversible except bloatware removal, which the app
 # gates behind an explicit confirmation.
 
