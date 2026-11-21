@@ -21,6 +21,8 @@ jobs:
           distribution: temurin
           java-version: '17'
           cache: gradle
+      - name: Set up Android SDK
+        uses: android-actions/setup-android@9fc6c4e9069bf8d3d10b2204b1fb8f6ef7065407 # v3
       - name: Install Android SDK packages
         run: sdkmanager "platforms;android-36" "build-tools;35.0.0"
       - name: Check bundled shell scripts
