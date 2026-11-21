@@ -1,48 +1,107 @@
-# Android Tweaker
+<div align="center">
 
-![AndroidTweaker — Tune it your way](branding/banner-readme.svg)
+# AndroidTweaker
 
-<a href="https://t.me/c0d3h01prjkts"><img src="https://img.shields.io/badge/Telegram-Channel-blue?logo=telegram&style=social"></a>
+### Know your battery. Make every charge count.
 
-Android Tweaker tunes your device's CPU, GPU, memory and scheduler settings automatically to match how you use your phone. Pick a profile once in the companion app — the module applies it at boot and every time you switch.
+See how your phone charges, how its battery is holding up, and how it uses power throughout the day.
 
-## Requirements
+**Android 8.0+ · Works without root · Your battery data stays on your device**
 
-- **Root manager:** Magisk v20.4+, KernelSU v0.6.6+, or APatch
-- **Android:** 8.0 (API 26) or higher
+[Get the Android app](app/release/androidtweaker.apk) · [Getting started](#your-first-minute) · [Explore the features](#a-clearer-picture-of-your-battery)
 
-## Installation
+</div>
 
-1. Download the latest `androidtweaker.zip` from the [Releases](https://github.com/c0d3h01/androidtweaker/releases) page
-2. Open your root manager (Magisk / KernelSU / APatch)
-3. Navigate to **Modules → Install from storage**
-4. Select the downloaded zip and flash it
-5. Reboot your device
+## A clearer picture of your battery
 
-The companion app installs automatically. The module activates about 30 seconds after boot and starts on the **Balanced** profile.
+Your battery percentage tells you how much is left. AndroidTweaker helps you understand what happens between charges—with live readings, useful alerts, and a history you can look back on.
 
-## How it works
+**You don't need to know anything about coding. You don't need root to use the battery features.**
 
-The module watches the profile you select and applies a matching set of kernel tunings — processor speeds, graphics clocks, memory behavior, background task handling and touch response. Switching profiles in the app takes effect within seconds, no reboot needed. A light maintenance pass (storage trim and app optimization setup) runs once at every boot.
+| What you want to know | How AndroidTweaker helps |
+| --- | --- |
+| **How is my phone charging?** | Follow charging speed, temperature, power, and estimated time to full. |
+| **How is my battery holding up?** | View estimated battery health and capacity alongside your charging history. |
+| **What happens between charges?** | Explore battery drain, screen use, and time spent in deep sleep. |
+| **When should I check my phone?** | Set alerts for a full or low battery, a chosen percentage, or temperature changes. |
+| **Can I check without opening the app?** | Add a home-screen widget or use the notification and Quick Settings tile. |
+| **Can I keep my records?** | Share battery history as a spreadsheet-friendly file or export a backup file. |
 
-## Profiles
+Charging summaries and overnight/weekly reports help you look back at your recorded activity. You can also explore device information and optional app-usage statistics.
 
-| Profile         | What it does                                                        | Use it when                         |
-| --------------- | ------------------------------------------------------------------- | ----------------------------------- |
-| **Battery**     | Lowers max speeds, enables battery saver, calms background activity | You need the longest screen-on time |
-| **Balanced**    | Stock-like speeds with smoother scheduling (default)                | Everyday use                        |
-| **Performance** | Locks speeds to maximum, sharpens responsiveness                    | Heavy multitasking, benchmarks      |
-| **Gaming**      | Maximum speeds plus touch boost and aggressive graphics settings    | Gaming sessions                     |
+Health, charging power, and remaining-time figures are estimates. Available readings depend on what your phone reports. App-usage statistics show time spent using apps, rather than the exact battery each app consumed.
 
-Performance and Gaming keep clocks high, so expect more heat and faster battery drain while they are active. Switch back to Balanced or Battery afterwards.
+## A look inside
 
-## Uninstall
+<p align="center">
+  <img src="docs/screenshots/battery.png" alt="Battery overview showing charge level, temperature, and live readings" width="300" />
+  <img src="docs/screenshots/device.png" alt="Device overview showing phone information and system status" width="300" />
+</p>
 
-1. Remove the module in your root manager (**Modules → Remove**), or flash the module zip again
-2. Reboot — the companion app is removed automatically and all settings revert
+Screenshots from an Android emulator. Readings and available details vary by phone.
 
-## Troubleshooting
+## Your first minute
 
-- **Nothing seems applied:** make sure the module is enabled in your root manager and reboot once. Root (Magisk/KernelSU/APatch) must be working.
-- **A profile feels wrong for your device:** switch to Balanced — it is the safe default on every device.
-- **Still stuck:** report it with your device model, Android version and root solution on the [Issues](https://github.com/c0d3h01/AndroidTweaker/issues) page or the [Telegram channel](https://t.me/c0d3h01prjkts).
+1. **Install AndroidTweaker.** Open the [APK file](app/release/androidtweaker.apk) and download it. An APK is an Android app installer; your phone may ask you to allow installation from the browser or file manager you're using.
+2. **Open Battery and turn on monitoring.** This starts recording your battery history. Monitoring is off until you enable it.
+3. **Allow notifications.** They show battery status and let you receive the alerts you choose.
+4. **Use your phone as usual.** Come back after charging and using it to explore your recorded sessions and estimates.
+
+You can pause monitoring from the app, its notification, or the Quick Settings tile. App-usage statistics ask for a separate **Usage Access** permission; you can leave that off.
+
+## More control, when you want it
+
+The everyday battery experience works on a normal Android phone. If you already use advanced Android access tools, AndroidTweaker also offers additional controls.
+
+| Your setup | Extra options |
+| --- | --- |
+| **Standard phone** | Battery monitoring, health estimates, history, alerts, reports, widgets, and exports. |
+| **Shizuku** | Supported system settings and tools through an optional Android access service. |
+| **Root access** | Battery, Balanced, Performance, and Gaming profiles, plus supported charging and device controls. |
+
+On compatible rooted phones, charging controls can pause charging at a chosen percentage or temperature while monitoring runs. These controls depend on the phone's hardware and software. The bypass option pauses battery charging; it does not guarantee direct power from the charger. See [charging controls and recovery](docs/specs/07-root-charging-controls.md) before using them.
+
+Connect optional access through **Settings → Device access**. You can continue using the battery features without connecting anything.
+
+## Your history stays yours
+
+Battery records, settings, and diagnostic logs stay on your device. AndroidTweaker does not upload battery telemetry. You choose when to share an export, and you can delete your recorded battery history from the app.
+
+## A few things to know
+
+- **Give it time to collect history.** Some estimates need recorded charging or usage sessions before they can appear.
+- **Keep monitoring enabled for history and alerts.** Android or your phone's power-saving settings can interrupt background collection.
+- **Backup export is available; importing a backup is not yet supported.**
+- **Advanced controls are optional and device-dependent.** They do not promise longer battery life or compatibility with every phone.
+
+## Explore further
+
+Read the [feature guide and specifications](docs/specs/README.md) for how each feature works. The [battery roadmap](docs/specs/11-battery-product-roadmap.md) describes future ideas separately from features available today.
+
+<details>
+<summary><strong>For developers and contributors</strong></summary>
+
+The app uses Kotlin, Jetpack Compose, and one Gradle module, with source grouped by feature.
+
+Use **JDK 17** and **Android SDK Platform 36**. Set `JAVA_HOME` and `ANDROID_HOME`, then run:
+
+```sh
+make doctor                 # Check your toolchain
+make check                  # JVM tests and shell checks
+make debug                  # Build a debug APK
+./gradlew :app:installDebug  # Install on an ADB-connected device
+```
+
+Debug APK: `app/build/outputs/apk/debug/app-debug.apk`.
+
+`make release` stages `app/release/androidtweaker.apk`. Release builds default to the repository's public development key. Configure your own private distribution key using the [release signing guide](app/README.md#release-signing); compatible updates require a compatible signing certificate. Run `./gradlew :app:lintDebug` for Android lint.
+
+- [Source architecture](docs/architecture/README.md)
+- [Source map](docs/architecture/source-map.md)
+- [Contribution guide](CONTRIBUTING.md)
+
+</details>
+
+## Open source
+
+AndroidTweaker's application source is available under the [MIT License](LICENSE). See [third-party notices](THIRD_PARTY_NOTICES.md) for font attribution and dependency notes.

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="battery_charge_restore_failed">Charging controls could not be restored</string>
+    <string name="battery_charge_restore_detail">Reconnect root and restart monitoring with charging rules turned off to retry.</string>
+    <string name="battery_monitor_starting">Starting battery monitor…</string>
+    <string name="battery_monitor_running">Monitoring in the background</string>
+    <string name="battery_monitor_stopped">Background monitoring is off</string>
+    <string name="battery_monitor_unavailable">Monitoring is enabled but stopped</string>
+    <string name="battery_monitor_pause">Pause</string>
+    <string name="battery_monitor_start">Start</string>
+    <string name="battery_monitor_chip_running">Monitor running</string>
+    <string name="battery_monitor_chip_starting">Starting…</string>
+    <string name="tile_monitor_unavailable">Monitor stopped</string>
+    <string name="tile_desc_starting">Battery %1$s. Monitor starting.</string>
+    <string name="tile_desc_stopped">Battery %1$s. Monitor stopped.</string>
+</resources>
