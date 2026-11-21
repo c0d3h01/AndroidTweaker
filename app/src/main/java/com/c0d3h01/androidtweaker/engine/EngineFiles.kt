@@ -14,7 +14,7 @@ object EngineFiles {
 
   fun logFile(context: Context): File = File(directory(context), LOG_NAME)
 
-  fun ready(context: Context): Boolean = File(directory(context), "lib/dispatcher.sh").isFile
+  fun ready(context: Context): Boolean = File(directory(context), "dispatcher.sh").isFile
 
   fun record(
     context: Context,

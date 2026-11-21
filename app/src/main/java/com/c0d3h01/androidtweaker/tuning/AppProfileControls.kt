@@ -7,17 +7,17 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.c0d3h01.androidtweaker.access.AccessManager
 import com.c0d3h01.androidtweaker.ui.components.Eyebrow
 import com.c0d3h01.androidtweaker.ui.components.Hairline
-import com.c0d3h01.androidtweaker.ui.components.Panel
 import com.c0d3h01.androidtweaker.ui.theme.AppColors
 
-internal fun LazyListScope.appProfileControls(features: TuningSettings, onPickApps: (AppPickerKind) -> Unit) {
+internal fun LazyListScope.appProfileControls(features: TuningSettings, onPickApps: (AppPickerKind) -> Unit, access: AccessManager.Mode, busy: Boolean) {
   item {
     Eyebrow(label = "App profiles")
   }
   item {
-    Panel {
+    TuningPanel(TuningFeature.PACKAGES, access, busy) {
       PickerRow(
         label = "Heavy apps",
         value = "${features.heavyApps.size} apps",

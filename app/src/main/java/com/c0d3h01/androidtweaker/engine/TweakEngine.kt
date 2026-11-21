@@ -17,7 +17,7 @@ import kotlinx.coroutines.withContext
  * Runs the bundled tweak engine and records its results in app-private storage.
  */
 object TweakEngine {
-  const val ENGINE_VERSION = "5"
+  const val ENGINE_VERSION = "8"
   private val operations = Mutex()
   private var stagedAssets: String? = null
 
@@ -34,7 +34,7 @@ object TweakEngine {
     runner: CommandRunner,
     profile: Profile,
     fromBoot: Boolean = false,
-  ): Result = execute(context, runner, "apply ${profile.name.lowercase(Locale.US)}", profile, fromBoot)
+  ): Result = execute(context, runner, "apply ${profile.commandKey}", profile, fromBoot)
 
   suspend fun misc(
     context: Context,
@@ -107,7 +107,7 @@ object TweakEngine {
       append(assets)
       appendLine(writeStagedFile("custom/features.conf", TuningStore.load(context).conf()))
       if (profile != null) {
-        val path = "custom/${profile.name.lowercase(Locale.US)}.conf"
+        val path = "custom/${profile.commandKey}.conf"
         appendLine(writeStagedFile(path, ProfileSettingsStore.load(context, profile).conf()))
       }
       appendLine("cd \"\$MODDIR\" || exit 1")

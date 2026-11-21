@@ -109,7 +109,12 @@ fun AppScreen(
     open(if (page != page.section) page.section else AppDestination.OVERVIEW)
   }
   LaunchedEffect(lifecycle) {
-    lifecycle.repeatOnLifecycle(Lifecycle.State.RESUMED) { model.refreshAccess() }
+    lifecycle.repeatOnLifecycle(Lifecycle.State.RESUMED) {
+      while (true) {
+        model.refreshAccess()
+        delay(5_000)
+      }
+    }
   }
   LaunchedEffect(lifecycle, page) {
     lifecycle.repeatOnLifecycle(Lifecycle.State.RESUMED) {

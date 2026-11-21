@@ -17,17 +17,24 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.semantics.disabled
 import androidx.compose.ui.semantics.heading
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.c0d3h01.androidtweaker.ui.theme.AppColors
 import com.c0d3h01.androidtweaker.ui.theme.AppType
+
+/** Shared interaction state for grouped controls, including accessibility actions. */
+val LocalControlsEnabled = staticCompositionLocalOf { true }
 
 @Composable
 fun Panel(
@@ -37,23 +44,29 @@ fun Panel(
   container: Color = AppColors.Panel,
   borderColor: Color = AppColors.Hairline,
   contentPadding: PaddingValues = PaddingValues(16.dp),
+  enabled: Boolean = true,
   content: @Composable ColumnScope.() -> Unit,
 ) {
+  val controlsEnabled = enabled && LocalControlsEnabled.current
   val shape = RoundedCornerShape(AppColors.CardRadius)
   val base =
     modifier
       .fillMaxWidth()
+      .alpha(if (controlsEnabled) 1f else 0.45f)
+      .semantics { if (!controlsEnabled) disabled() }
       .clip(shape)
       .background(container)
       .border(1.dp, borderColor, shape)
       .let {
         if (onClick != null) {
-          it.clickable(role = Role.Button, onClickLabel = onClickLabel, onClick = onClick)
+          it.clickable(enabled = controlsEnabled, role = Role.Button, onClickLabel = onClickLabel, onClick = onClick)
         } else {
           it
         }
       }.padding(contentPadding)
-  Column(base, content = content)
+  CompositionLocalProvider(LocalControlsEnabled provides controlsEnabled) {
+    Column(base, content = content)
+  }
 }
 
 @Composable

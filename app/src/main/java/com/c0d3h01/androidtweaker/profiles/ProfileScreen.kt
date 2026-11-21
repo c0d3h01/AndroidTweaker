@@ -51,7 +51,7 @@ internal fun LazyListScope.profileControls(
     }
   }
   item {
-    Panel(contentPadding = PaddingValues(16.dp)) {
+    Panel(enabled = shell.canApplyProfiles && !busy, contentPadding = PaddingValues(16.dp)) {
       Text(
         if (pendingCode == profile.code) "Applying this profile now…" else "Settings save as you change them.",
         style = MaterialTheme.typography.bodySmall,
@@ -93,7 +93,7 @@ internal fun LazyListScope.profileControls(
       }
     }
     item {
-      Panel(contentPadding = PaddingValues(horizontal = 16.dp, vertical = 4.dp)) {
+      Panel(enabled = shell.canApplyProfiles && !busy, contentPadding = PaddingValues(horizontal = 16.dp, vertical = 4.dp)) {
         groups.forEachIndexed { position, group ->
           if (position > 0) Hairline(Modifier.padding(vertical = 2.dp))
           SwitchRow(
@@ -116,7 +116,7 @@ internal fun LazyListScope.profileControls(
     }
   }
   item {
-    Panel(contentPadding = PaddingValues(16.dp)) {
+    Panel(enabled = shell.canApplyProfiles && !busy, contentPadding = PaddingValues(16.dp)) {
       OptionRow(
         label = "CPU ceiling",
         value = prefs.cpuCeiling,
@@ -157,7 +157,7 @@ internal fun LazyListScope.profileControls(
   }
 
   item {
-    Panel(contentPadding = PaddingValues(16.dp)) {
+    Panel(enabled = shell.canApplyProfiles && !busy, contentPadding = PaddingValues(16.dp)) {
       Row(verticalAlignment = Alignment.CenterVertically) {
         Column(Modifier.weight(1f)) {
           Text(

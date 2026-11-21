@@ -41,6 +41,8 @@ Follow a tuning action: feature control → `ProfileController` → compatible p
 
 Keep pure calculations free of Android/Compose and privileged backends. Keep Android reads and notification rendering in their named adapters. Screens render state and invoke feature actions; shell execution belongs to the engine. Do not add general `utils`, `helpers` or technical-layer dumping grounds.
 
+`TuningAccess` defines which groups need root vs shell access, while `TuningPanel` propagates disabled controls consistently. The mutation boundary checks the live backend before persisting changes. The three shell profile files contain their own direct, commented tweak operations; shared safety and detection live in `core/`, and global commands live in `actions/`. `BatterySensors` separates readable sensor fallback from the Android adapter and distinguishes missing current/voltage from measured power.
+
 `TuningStore` deliberately retains the existing preference layout. `TuningSettings` combines a feature-owned `ChargingSettings` value with other global switches and renders the same shell configuration. The code has one config writer, not separate stores that could race. `BatteryReader` remains a concrete object; no unused source interface was added.
 
 Small root Android entry classes remain where they were for compatibility. In particular, widget/tile class identity is retained rather than creating wrappers just to move small files. The empty custom Application was removed. Service lifecycle remains in the root monitor service; extracted policies make a second generic monitor coordinator unnecessary.
@@ -48,3 +50,5 @@ Small root Android entry classes remain where they were for compatibility. In pa
 ## Compatibility and follow-ups
 
 See [preserved contracts](compatibility.md), [implementation ledger](progress.md), [source map](source-map.md) and [feature specs](../specs/README.md). Crash-safe sessions, CSV correction, backup restore, cadence/UI reconciliation and verified charging capability are separate behavior projects, not hidden refactor changes. Remaining hardcoded UI text requires a dedicated localization pass; resource IDs and existing string XML are preserved in this migration.
+
+See the [bundled engine tree and editing guide](engine-assets.md) for shell source ownership.

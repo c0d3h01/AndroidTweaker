@@ -7,33 +7,35 @@ import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
+import com.c0d3h01.androidtweaker.R
 import androidx.compose.ui.unit.dp
+import com.c0d3h01.androidtweaker.access.AccessManager
+import com.c0d3h01.androidtweaker.tuning.TuningFeature
+import com.c0d3h01.androidtweaker.tuning.TuningPanel
 import com.c0d3h01.androidtweaker.tuning.TuningSettings
 import com.c0d3h01.androidtweaker.ui.components.ChoiceChipRow
 import com.c0d3h01.androidtweaker.ui.components.Eyebrow
 import com.c0d3h01.androidtweaker.ui.components.Hairline
-import com.c0d3h01.androidtweaker.ui.components.Panel
 import com.c0d3h01.androidtweaker.ui.components.SwitchRow
 import com.c0d3h01.androidtweaker.ui.theme.AppColors
 
 internal fun LazyListScope.chargingControls(
   features: TuningSettings,
   onFeatures: (TuningSettings) -> Unit,
-  rooted: Boolean,
+  access: AccessManager.Mode,
+  busy: Boolean,
 ) {
+  val rooted = access.canApplyProfiles
   item {
     Eyebrow(label = "Health & charging")
   }
   item {
-    Panel {
+    TuningPanel(TuningFeature.CHARGING, access, busy) {
       Text("Charge limit", style = MaterialTheme.typography.titleMedium, color = AppColors.Ink)
       Spacer(Modifier.height(2.dp))
       Text(
-        if (rooted) {
-          "Holds charging at the chosen level and releases 2% lower while the battery monitor runs."
-        } else {
-          "Needs root: charge nodes are kernel sysfs entries."
-        },
+        stringResource(R.string.charging_limit_detail),
         style = MaterialTheme.typography.bodySmall,
         color = AppColors.InkFaint,
       )

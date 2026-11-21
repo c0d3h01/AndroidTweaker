@@ -51,11 +51,13 @@ import com.c0d3h01.androidtweaker.battery.Plugged
 import com.c0d3h01.androidtweaker.battery.analysis.estimateRemaining
 import com.c0d3h01.androidtweaker.battery.analysis.estimateToFull
 import com.c0d3h01.androidtweaker.battery.analysis.qualityTier
+import com.c0d3h01.androidtweaker.battery.batteryPowerWatts
 import com.c0d3h01.androidtweaker.battery.chargeSpeedLabel
 import com.c0d3h01.androidtweaker.battery.formatCurrent
 import com.c0d3h01.androidtweaker.battery.formatDuration
 import com.c0d3h01.androidtweaker.battery.formatMah
 import com.c0d3h01.androidtweaker.battery.formatPower
+import com.c0d3h01.androidtweaker.battery.formatPowerValue
 import com.c0d3h01.androidtweaker.battery.formatTemp
 import com.c0d3h01.androidtweaker.battery.formatVoltage
 import com.c0d3h01.androidtweaker.battery.plugLabel
@@ -288,17 +290,21 @@ internal fun MetricGrid(
       "power" -> {
         MetricTile(
           label = "Power",
-          value = reading?.powerW?.let { "%.1f".format(it) } ?: "—",
+          value = formatPowerValue(reading?.powerW),
           unit = "W",
+          footer = stringResource(when {
+            reading?.powerW == null -> R.string.battery_power_unavailable
+            reading.isPlugged -> R.string.battery_power_charging
+            else -> R.string.battery_power_draw
+          }),
           tone = AppColors.Lavender,
           trend =
             samples
               .mapNotNull { p ->
                 val ma = p.currentMa ?: return@mapNotNull null
                 val mv = p.voltageMv ?: return@mapNotNull null
-                (kotlin.math.abs(ma) * mv / 1_000_000f)
+                batteryPowerWatts(ma, mv)
               }.takeLast(30),
-          footer = reading?.let { chargeSpeedLabel(it.currentMa, it.powerW, it.plugged) },
         )
       }
 

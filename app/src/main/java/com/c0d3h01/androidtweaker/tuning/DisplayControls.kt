@@ -8,18 +8,18 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.c0d3h01.androidtweaker.access.AccessManager
 import com.c0d3h01.androidtweaker.ui.components.ChoiceChipRow
 import com.c0d3h01.androidtweaker.ui.components.Eyebrow
 import com.c0d3h01.androidtweaker.ui.components.Hairline
-import com.c0d3h01.androidtweaker.ui.components.Panel
 import com.c0d3h01.androidtweaker.ui.theme.AppColors
 
-internal fun LazyListScope.displayControls(features: TuningSettings, onFeatures: (TuningSettings) -> Unit) {
+internal fun LazyListScope.displayControls(features: TuningSettings, onFeatures: (TuningSettings) -> Unit, access: AccessManager.Mode, busy: Boolean) {
   item {
     Eyebrow(label = "Device controls")
   }
   item {
-    Panel {
+    TuningPanel(TuningFeature.DISPLAY, access, busy) {
       Text("Resolution", style = MaterialTheme.typography.titleMedium, color = AppColors.Ink)
       Spacer(Modifier.height(8.dp))
       val resolutions = Resolution.entries

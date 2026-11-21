@@ -1,6 +1,5 @@
 package com.c0d3h01.androidtweaker.battery
 
-import kotlin.math.abs
 
 enum class Plugged { NONE, AC, USB, WIRELESS, DOCK }
 
@@ -24,12 +23,7 @@ data class BatteryReading(
 ) {
   val isPlugged: Boolean get() = plugged != Plugged.NONE
   val isCharging: Boolean get() = status == BatteryStatus.CHARGING
-  val powerW: Float?
-    get() {
-      val ma = currentMa ?: return null
-      val mv = voltageMv ?: return null
-      return abs(ma) * mv / 1_000_000f
-    }
+  val powerW: Float? get() = batteryPowerWatts(currentMa, voltageMv)
   val capacityMah: Int? get() = fullMah?.takeIf { it > 0 } ?: designMah?.takeIf { it > 0 }
 }
 

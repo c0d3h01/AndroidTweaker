@@ -30,4 +30,4 @@ Run the simulated shell charging test, then on a rooted device verify actual cha
 
 ## Sources
 
-[ChargingController.kt](../../app/src/main/java/com/c0d3h01/androidtweaker/charging/ChargingController.kt), [charging.sh](../../app/src/main/assets/tweaker/lib/tweaks/charging.sh), [FeatureSections.kt](../../app/src/main/java/com/c0d3h01/androidtweaker/tuning/FeatureSections.kt), [charging_test.sh](../../app/src/test/shell/charging_test.sh).
+[ChargingController.kt](../../app/src/main/java/com/c0d3h01/androidtweaker/charging/ChargingController.kt), [charging.sh](../../app/src/main/assets/tweaker/actions/charging.sh), [FeatureSections.kt](../../app/src/main/java/com/c0d3h01/androidtweaker/tuning/FeatureSections.kt), [charging_test.sh](../../app/src/test/shell/charging_test.sh).

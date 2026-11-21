@@ -27,7 +27,7 @@ class AccessManagerTest {
 
   @Test
   fun kernelCommandsRequireRoot() {
-    assertTrue(EngineCommandPolicy.commandRequiresRoot("apply gaming"))
+    assertTrue(EngineCommandPolicy.commandRequiresRoot("apply performance"))
     assertTrue(EngineCommandPolicy.commandRequiresRoot("throttle off"))
     assertTrue(EngineCommandPolicy.commandRequiresRoot("charge"))
     assertTrue(EngineCommandPolicy.commandRequiresRoot("clean ram"))

@@ -9,13 +9,15 @@ The Battery live page shows charge level/state, charger type, current, voltage, 
 | Level | BatteryManager capacity, falling back to broadcast level/scale |
 | State | Charging, discharging, full, idle or unknown from broadcast |
 | Connection | AC, USB, wireless, dock or none; plugged is distinct from actively charging |
-| Current | CURRENT_NOW microamps converted to rounded mA; sysfs fallback |
-| Voltage | Broadcast mV, otherwise sysfs microvolts divided by 1000 |
+| Current | Nonzero CURRENT_NOW microamps converted to mA; readable battery/bms `current_now` fallback, then CURRENT_AVERAGE. Zero while actively charging/discharging is unavailable if no usable fallback exists. |
+| Voltage | Valid broadcast mV, otherwise the first valid battery/bms sysfs microvolts divided by 1000 |
 | Temperature | Broadcast tenths of °C, otherwise normalized sysfs value |
 | Power | Absolute current mA × voltage mV / 1,000,000; battery-side estimate |
 | Charge counter | Positive µAh reading, otherwise readable sysfs |
 | Design/full capacity, cycles, health | Device-exposed fields; absent values remain unavailable |
 | Screen state | PowerManager interactive state |
+
+Current fallback uses standard Android/kernel units without guessing mA from magnitude. Unsupported readings show an unavailable value rather than a fabricated zero watt reading. Small nonzero power below 0.1 W uses two decimals, or three below 0.01 W. Average-current fallback yields an average-based estimate, not an instantaneous charger measurement. Hardware telemetry uses the same battery reader.
 
 Power is not charger wall-input power or negotiated USB-PD power. Driver current signs and units can vary. Unknown values must not be presented as measured zeros.
 

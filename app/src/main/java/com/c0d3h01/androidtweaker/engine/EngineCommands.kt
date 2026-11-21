@@ -13,7 +13,7 @@ object EngineCommands {
   )
 
   fun apply(dir: String, profile: Profile, stamp: String): String =
-    run(dir, "apply ${profile.name.lowercase(Locale.US)}", stamp)
+    run(dir, "apply ${profile.commandKey}", stamp)
 
   fun misc(dir: String, stamp: String): String = run(dir, "misc", stamp)
 
@@ -30,7 +30,7 @@ object EngineCommands {
   fun quote(value: String): String = "'" + value.replace("'", "'\\''") + "'"
 
   private fun invoke(dir: String, args: String, stamp: String): String {
-    val script = quote("$dir/lib/dispatcher.sh")
+    val script = quote("$dir/dispatcher.sh")
     val log = quote("$dir/tweaks.log")
     val arguments = args.split(' ').filter(String::isNotEmpty).joinToString(" ", transform = ::quote)
     return buildString {

@@ -16,6 +16,10 @@ Root is requested by an explicit connection action or authorized boot reapply. R
 
 Usage Access is checked with AppOps and queried through UsageStatsManager. It does not provide per-app electrical consumption. On Android 13+, the UI requests notification permission when enabling the monitor/activity notifications. Notification channels can still be blocked independently.
 
+## Unavailable controls
+
+Tuning groups share one access policy. Root-only controls are faded/disabled without a connected root backend. Shell controls are faded/disabled without root or an authorized Shizuku ADB session. Disabled panels propagate interaction state to buttons, chips, switches and package pickers, and expose disabled accessibility semantics. While the app is resumed, backend availability refreshes every five seconds; mutation handlers recheck the backend before saving. Navigation and access-connection actions remain available.
+
 ## Failure behavior
 
 Disconnected or denied root must leave public battery pages usable. Requested settings and successful device mutation are different states: a saved toggle alone is not evidence that an OEM accepted a shell command. Backend death, SELinux denial and missing commands/nodes must be handled as conditional availability.

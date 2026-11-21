@@ -1,5 +1,5 @@
 #!/system/bin/sh
-# lib/tweaks/apps.sh — per-app profiles through Android's own game mode.
+# actions/apps.sh — per-app profiles through Android's own game mode.
 # Heavy apps get performance mode, light apps get battery mode, and the heavy
 # list is also published as the RT package blacklist (as FDE.AI does).
 

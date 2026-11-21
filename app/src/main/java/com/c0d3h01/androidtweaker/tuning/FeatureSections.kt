@@ -16,15 +16,15 @@ fun LazyListScope.featureSections(
   onRestore: (String) -> Unit,
   onGrantShizuku: () -> Unit,
   onOpenShizuku: () -> Unit,
+  busy: Boolean,
 ) {
-  val rooted = shell.canApplyProfiles
 
-  chargingControls(features, onFeatures, rooted)
-  thermalControls(features, onFeatures, rooted)
-  powerControls(features, onFeatures, onPickApps)
-  systemControls(features, onFeatures, rooted, onCommand, onPickApps, onRemoveBloat, onRestore)
-  displayControls(features, onFeatures)
-  networkControls(features, onFeatures)
-  appProfileControls(features, onPickApps)
+  chargingControls(features, onFeatures, shell, busy)
+  thermalControls(features, onFeatures, shell, busy)
+  powerControls(features, onFeatures, onPickApps, shell, busy)
+  systemControls(features, onFeatures, shell, busy, onCommand, onPickApps, onRemoveBloat, onRestore)
+  displayControls(features, onFeatures, shell, busy)
+  networkControls(features, onFeatures, shell, busy)
+  appProfileControls(features, onPickApps, shell, busy)
   accessSettings(shell, onGrantShizuku, onOpenShizuku)
 }

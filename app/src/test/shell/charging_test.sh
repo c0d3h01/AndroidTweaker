@@ -8,8 +8,8 @@ SYSFS_ROOT="$fixture/sysfs"
 battery="$SYSFS_ROOT/sys/class/power_supply/battery"
 mkdir -p "$MODDIR/custom" "$battery"
 
-. app/src/main/assets/tweaker/lib/common.sh
-. app/src/main/assets/tweaker/lib/tweaks/charging.sh
+. app/src/main/assets/tweaker/core/common.sh
+. app/src/main/assets/tweaker/actions/charging.sh
 is_root() { return 0; }
 
 check() {

@@ -1,6 +1,6 @@
 #!/system/bin/sh
-# lib/common.sh — shared helpers for the on-device tweak engine.
-# Sourced by the dispatcher, profiles and lib/tweaks modules.
+# core/common.sh — shared helpers for the on-device tweak engine.
+# Sourced by the dispatcher, profiles and tuning and action modules.
 # The app exports MODDIR to its extracted asset directory;
 # resolve_moddir() fills it when a script is run directly.
 
@@ -16,7 +16,7 @@ resolve_moddir() {
   fi
   _rmi=0
   while [ "$_rmi" -lt 4 ]; do
-    if [ -f "$_rmd/lib/common.sh" ]; then
+    if [ -f "$_rmd/core/common.sh" ]; then
       MODDIR=$(cd "$_rmd" 2>/dev/null && pwd -P)
       return 0
     fi

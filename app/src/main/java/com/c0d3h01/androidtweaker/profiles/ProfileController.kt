@@ -8,6 +8,7 @@ import com.c0d3h01.androidtweaker.engine.EngineCommandPolicy
 import com.c0d3h01.androidtweaker.engine.EngineFiles
 import com.c0d3h01.androidtweaker.engine.TweakEngine
 import com.c0d3h01.androidtweaker.settings.ActivityNotifications
+import com.c0d3h01.androidtweaker.tuning.TuningAccess
 import com.c0d3h01.androidtweaker.tuning.TuningSettings
 import com.c0d3h01.androidtweaker.tuning.TuningStore
 import kotlinx.coroutines.CancellationException
@@ -78,7 +79,8 @@ class ProfileController(
   }
 
   fun saveFeatures(next: TuningSettings) {
-    val clean = next.sanitized()
+    val clean = TuningAccess.allowedChanges(state.value.features, next, AccessManager.mode())
+    if (clean == state.value.features) return
     mutableState.update { it.copy(features = clean) }
     TuningStore.save(context, clean)
     if (currentAccess() == AccessManager.Mode.NONE) return

@@ -36,6 +36,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.c0d3h01.androidtweaker.ui.components.EmptyState
 import com.c0d3h01.androidtweaker.ui.components.LoadingLine
+import com.c0d3h01.androidtweaker.ui.components.LocalControlsEnabled
 import com.c0d3h01.androidtweaker.ui.components.SearchField
 import com.c0d3h01.androidtweaker.ui.theme.AppColors
 import com.c0d3h01.androidtweaker.ui.theme.AppType
@@ -69,7 +70,7 @@ internal fun PickerRow(
       .fillMaxWidth()
       .heightIn(min = 48.dp)
       .clip(RoundedCornerShape(10.dp))
-      .clickable(role = androidx.compose.ui.semantics.Role.Button, onClick = onClick)
+      .clickable(enabled = LocalControlsEnabled.current, role = androidx.compose.ui.semantics.Role.Button, onClick = onClick)
       .padding(vertical = 6.dp),
     verticalAlignment = Alignment.CenterVertically,
   ) {
