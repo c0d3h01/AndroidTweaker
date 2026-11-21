@@ -1,4 +1,4 @@
-# Implementation ledger — docs/plans/2026-11-20-source-architecture.md
+# Source architecture implementation ledger
 
 Baseline: JVM suite, debug assembly and lint passed; shell syntax and charging simulation passed on 2026-11-20. Existing Kotlin/Gradle deprecation warnings remain.
 

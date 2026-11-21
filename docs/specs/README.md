@@ -30,4 +30,4 @@ Each feature document includes source references and verification expectations. 
 
 ## Source architecture plan
 
-See the [proposed source architecture and migration plan](../plans/2026-11-20-source-architecture.md) for feature grouping, exact renames, dead-code criteria and incremental open-source preparation. This plan is proposed; the specs above describe the current app.
+See the [source architecture](../architecture/README.md), [source map](../architecture/source-map.md) and [implementation ledger](../architecture/progress.md) for feature ownership and completed migration details.
